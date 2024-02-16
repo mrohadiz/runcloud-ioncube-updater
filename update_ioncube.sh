@@ -1,12 +1,13 @@
 #!/bin/bash
 
-cd /usr/local
+cd /tmp/
 sudo rm -rf ioncube_loaders_lin_x86-64.tar.gz
-sudo rm -rf /usr/local/ioncube
+sudo rm -rf /tmp/ioncube
 
 echo "Download und entpacken der neusten ionCube Loader Version"
-sudo wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
-sudo tar xzf ioncube_loaders_lin_x86-64.tar.gz
+cd /tmp/
+wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+tar -zxvf ioncube_loaders_lin_x86-64.tar.gz
 
 ### PHP 5.5
 if [ -d "/RunCloud/Packages/php55rc/" ] 
@@ -70,8 +71,16 @@ then
     sudo bash -c 'echo "zend_extension=ioncube_loader_lin_7.4.so" > /etc/php74rc/conf.d/20ioncube.ini'
     sudo systemctl restart php74rc-fpm
 fi
+#### PHP 8.1 ###
+if [ -d "/RunCloud/Packages/php81rc/" ]
+then
+    echo "Install ioncube Loader for PHP 8.1"
+    sudo cp ioncube/ioncube_loader_lin_8.1.so /RunCloud/Packages/php81rc/lib/php/extensions/no-debug-non-zts-20210902/
+    sudo bash -c 'echo "zend_extension=ioncube_loader_lin_8.1.so" > /etc/php81rc/conf.d/ioncube.ini'
+    sudo systemctl restart php81rc-fpm
+fi
 
 echo "Remove TEMP Files"
 sudo rm -rf ioncube_loaders_lin_x86-64.tar.gz
-sudo rm -rf /usr/local/ioncube
+sudo rm -rf /tmp/ioncube
 
